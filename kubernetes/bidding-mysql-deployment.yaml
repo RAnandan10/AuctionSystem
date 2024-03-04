@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bidding-mysql-deployment
+spec:
+  selector:
+    matchLabels:
+      app: bidding-mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: bidding-mysql
+    spec:
+      containers:
+        - image: mysql:5.7
+          name: bidding-mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-root-password-secret
+                  key: MYSQL_ROOT_PASSWORD
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bidding-mysql-service
+spec:
+  selector:
+    app: bidding-mysql
+  ports:
+    - name: db
+      protocol: TCP
+      port: 3306
+      targetPort: 3306

@@ -1,0 +1,58 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+build:
+  local:
+    push: false
+  artifacts:
+    - image: auction-website-auth
+      context: services/authentication
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: auction-website-frontend
+      context: services/frontend
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: auction-website-listings
+      context: services/listings
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: auction-website-bid
+      context: services/bidding
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: auction-website-expiration
+      context: services/expiration
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: auction-website-profile
+      context: services/profile
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+deploy:
+  kubectl:
+    manifests:
+      - ./kubernetes/*
